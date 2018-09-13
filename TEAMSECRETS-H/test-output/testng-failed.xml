@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite]" parallel="none">
+  <parameter name="browser" value="chrome"/>
+  <test name="chrome(failed)" parallel="none">
+    <parameter name="browser" value="chrome"/>
+    <classes>
+      <class name="com.ts.scriptlibrary.TeamSecrets">
+        <methods>
+          <include name="validateAllImportantMessageAtPostaTeamSecertPage"/>
+          <include name="validateTeamSceretPanelIsAvailable"/>
+          <include name="allComponentOfPostaTeamSecretsPage"/>
+          <include name="tearDown"/>
+          <include name="browserSetting"/>
+          <include name="start"/>
+        </methods>
+      </class> <!-- com.ts.scriptlibrary.TeamSecrets -->
+    </classes>
+  </test> <!-- chrome(failed) -->
+</suite> <!-- Failed suite [Suite] -->

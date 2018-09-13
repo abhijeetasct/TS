@@ -1,0 +1,681 @@
+/**
+ * 
+ */
+package com.ts.genericlibrary;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
+
+import com.codoid.products.exception.FilloException;
+import com.codoid.products.fillo.Fillo;
+import com.codoid.products.fillo.Recordset;
+import com.gargoylesoftware.htmlunit.javascript.host.Window;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+
+/**
+ * @author user
+ *
+ */
+public class GenericKeywords {
+
+	public static WebDriver driver;
+	public static ExtentReports report;
+	public static ExtentTest logger;
+
+	/**
+	 * launchApplication method launch the application
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void launchApplication() {
+
+		try {
+			System.out.println("Launch application start");
+			System.setProperty("webdriver.chrome.driver",
+					"/Users/user/Documents/Abhijeet/Workspace/TEAMSECRETS-H/src/test/resources/Drivers/chromedriver");
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("disable-infobars");
+			options.addArguments("--start-maximized");
+			options.addArguments("--disable-extensions");
+			driver = new ChromeDriver(options);
+			minWait();
+			driver.manage().window().fullscreen();
+			System.out.println("Launch application end");
+			logger.log(LogStatus.INFO, "BrowsweUp", "Browser Is Up And Running");
+			System.out.println("Browser launched");
+
+			logger.log(LogStatus.INFO, "launchApplication", "Application Is Launched");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.log(LogStatus.FAIL, "launchApplication", "Application Is Launched");
+			Assert.fail();
+		}
+
+	}
+
+	/**
+	 * fetchData method fetch data from datasheet
+	 * 
+	 * @return value based on success of this function
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static String fetchData(String str_value) {
+
+		File file = new File("../TEAMSECRETS-H/TestData/data.properties");
+		FileInputStream fileInput = null;
+		try {
+			fileInput = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		Properties prop = new Properties();
+
+		try {
+			prop.load(fileInput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String value = prop.getProperty(str_value);
+		return String.valueOf(value);
+
+	}
+
+	/**
+	 * captureScreenshot method use to capture screenShot On Android Application
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void captureScreenshot() throws Exception {
+
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMMddHHmms");
+		Date now = new Date();
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		String strDate = sdfDate.format(now);
+		File destFile = new File("Reports/screenshots/Screen_" + strDate + ".png");
+		FileUtils.copyFile(scrFile, destFile);
+		System.out.println("Screenshot Captured");
+		logger.log(LogStatus.FAIL, "Image Captured" + logger.addScreenCapture(destFile.getPath().split("Reports/")[1]));
+	}
+
+	/**
+	 * screenshot method use to capture screenShot On WebUI
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void screenshot() throws Exception {
+
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMMddHHmms");
+		Date now = new Date();
+		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		String strDate = sdfDate.format(now);
+		File destFile = new File("Reports/screenshots/Screen_" + strDate + ".png");
+		FileUtils.copyFile(scrFile, destFile);
+		System.out.println("Screenshot Captured");
+		logger.log(LogStatus.INFO, "Image Captured" + logger.addScreenCapture(destFile.getPath().split("Reports/")[1]));
+	}
+
+	/**
+	 * minMinWait Method Sleep For 500 MiliSeconds
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void minMinWait() {
+
+		try {
+
+			Thread.sleep(500);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * minWait Method Sleep For 1 Seconds
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void minWait() {
+
+		try {
+
+			Thread.sleep(1000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * medWait Method Sleep For 3 Seconds
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void medWait() {
+
+		try {
+
+			Thread.sleep(3000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * maxWait Method Sleep For 5 Seconds
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void maxWait() {
+
+		try {
+
+			Thread.sleep(5000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * getHrefAndLoad method gets the url of link/button and loads in the same
+	 * 
+	 * @author Abhijeet Kumar
+	 */
+	public static void getHrefAndLoad(String str_xpath) {
+		try {
+			waitTillPageLoad();
+			WebElement buttonOrLink = driver.findElement(By.xpath(str_xpath));
+			String url = buttonOrLink.getAttribute("href");
+			driver.get(url);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * waitTillPageLoad method wait till page load completely
+	 * 
+	 * @author Abhijeet Kumar
+	 * @throws InterruptedException
+	 */
+
+	public static void waitTillPageLoad() throws InterruptedException {
+		try {
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * waitTillElementPresent method wait till element present in UI
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void waitTillElementPresent(String Str_ElemetXpath) {
+
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 20);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Str_ElemetXpath)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+	}
+
+	/**
+	 * click method Perform click operation on Web object
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void Click(String str_Xpath, String str_discription) {
+		try {
+			waitTillElementPresent(str_Xpath);
+			// minWait();
+			driver.findElement(By.xpath(str_Xpath)).click();
+			System.out.println(str_discription);
+			logger.log(LogStatus.INFO, "Click", str_discription);
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "Click", str_discription);
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * exists method Validate that Element is present
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void exists(String Str_XpathOfElement, String Str_discription) {
+
+		try {
+			waitTillElementPresent(Str_XpathOfElement);
+			if (driver.findElement(By.xpath(Str_XpathOfElement)) != null) {
+				logger.log(LogStatus.PASS, "Exists", "Validate That " + Str_discription + " Displayed");
+				System.out.println("Validate That " + Str_discription + " Displayed");
+			} else {
+				System.out.println(Str_discription + " not Displayed");
+			}
+
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "Exists", "Validate That " + Str_discription + " Displayed");
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+	}
+
+	/**
+	 * enterText method perform enter operation on android object
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void enterText(String str_Xpath, String str_Data, String str_discription) {
+		try {
+			waitTillElementPresent(str_Xpath);
+			// driver.findElement(By.xpath(str_Xpath)).click();
+			driver.findElement(By.xpath(str_Xpath)).clear();
+			driver.findElement(By.xpath(str_Xpath)).sendKeys(str_Data);
+			System.out.println(str_discription);
+			logger.log(LogStatus.INFO, "EnterText", str_discription);
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "EnterText", str_discription);
+			e.printStackTrace();
+			Assert.fail();
+
+		}
+	}
+
+	/**
+	 * loadURL method will enter the given URL to browser
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void loadURL(String str_URL) {
+		try {
+			launchApplication();
+			waitTillPageLoad();
+			driver.get(str_URL);
+			System.out.println(str_URL);
+			// logger.log(LogStatus.INFO, "loadURL", "URL Is Loaded" + str_URL);
+		} catch (Exception e) {
+			// logger.log(LogStatus.FAIL, "loadURL", "URL Is Loaded");
+			e.printStackTrace();
+			Assert.fail();
+
+		}
+	}
+
+	/**
+	 * clickIfExist method Perform click operation on web object if present
+	 * 
+	 * @param str_Xpath
+	 *            is Object Xpath
+	 * @author Abhijeet
+	 * @throws InterruptedException
+	 */
+
+	public boolean clickIfExist(String str_Xpath, String str_discription) throws InterruptedException {
+		boolean bStatus = false;
+		try {
+
+			if (driver.findElements(By.xpath(str_Xpath)).size() != 0) {
+
+				driver.findElement(By.xpath(str_Xpath)).click();
+
+			}
+			bStatus = true;
+			logger.log(LogStatus.INFO, "clickIfExist", str_discription);
+		} catch (Exception e) {
+			logger.log(LogStatus.WARNING, "clickIfExist", str_discription);
+
+			bStatus = true;
+		}
+		return bStatus;
+	}
+
+	/**
+	 * selectRecord method Perform fetch Data ZFrom DB
+	 * 
+	 * @param updateQuery
+	 *            is Fetch Query
+	 * @author Abhijeet
+	 */
+
+	/**
+	 * ScrollDownUsingXpath method scroll down the page to the particular object
+	 * in a page using java script
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void scrollDownUsingXpath(String str_Xpath) throws Exception {
+		try {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].scrollIntoView();", str_Xpath);
+		} catch (Exception e) {
+			// logger.log(LogStatus.FAIL, "ScrollDownUsingXpath", "ScrollDown To
+			// Element");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * scrollDown method scroll down the page to 1000 pixel vertical in a page
+	 * using java script
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void scrollDown() throws Exception {
+		try {
+			medWait();
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("window.scrollBy(150,document.body.scrollHeight)");
+
+		} catch (Exception e) {
+			// logger.log(LogStatus.FAIL, "ScrollDownUsingXpath", "ScrollDown To
+			// Element");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * readController method read data from controller sheet for execution
+	 * 
+	 * @param str_Query
+	 *            is query which need to pass at run time
+	 * @author Abhijeet
+	 *
+	 * 
+	 */
+
+	public ArrayList<String> readController(String str_Query) throws FilloException {
+
+		Fillo fillo = new Fillo();
+		com.codoid.products.fillo.Connection connection = fillo
+				.getConnection("/Abhijeet/Workspace/TEAMSECRETS/src/test/resources/TestController/Controller.xls");
+		String strQuery = str_Query;
+		Recordset recordset = connection.executeQuery(strQuery);
+		ArrayList<String> arrlist = new ArrayList<String>();
+		while (recordset.next()) {
+
+			String runData = (recordset.getField("Script Name"));
+
+			arrlist.add(runData);
+			System.out.println(runData);
+		}
+		recordset.close();
+		connection.close();
+		return arrlist;
+
+	}
+
+	/**
+	 * closeBrowser Method Will Close the active browser
+	 * 
+	 * @author Abhijeet
+	 */
+	public void closeBrowser() {
+
+		report.endTest(logger);
+		report.flush();
+		driver.close();
+		driver.quit();
+
+	}
+
+	/**
+	 * clickIfExist Method Perform click operation if expected element is
+	 * present in UI else skip
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void clickIfExist(String str_xpath) {
+
+		try {
+			minWait();
+			System.out.println("start");
+			if (driver.findElements(By.xpath(str_xpath)).size() != 0) {
+				medWait();
+				driver.findElement(By.xpath(str_xpath)).click();
+				System.out.println("end");
+			}
+
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	/**
+	 * switchToiFrame Method Perform switch to particulat iFrame if any iFrame
+	 * present to UI
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void switchToiFrame(Integer int_Frame) {
+
+		medWait();
+		try {
+			driver.switchTo().frame(int_Frame);
+			minWait();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+	}
+
+	/**
+	 * switchToParent Method Perform switch to Parent Frame In UI
+	 * 
+	 * @author Abhijeet
+	 */
+	public static void switchToParent() {
+
+		minWait();
+		try {
+			driver.switchTo().defaultContent();
+			minWait();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+	}
+
+	/**
+	 * exists method Validate that Element is present
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void existsWithScreenshot(String Str_XpathOfElement, String Str_discription) {
+
+		try {
+			minMinWait();
+			// screenshot();
+			waitTillElementPresent(Str_XpathOfElement);
+			if (driver.findElement(By.xpath(Str_XpathOfElement)) != null) {
+				logger.log(LogStatus.PASS, "Exists", "Validate That " + Str_discription + " displayed");
+				System.out.println("Validate That " + Str_discription + " displayed");
+			} else {
+				System.out.println(Str_discription + " not Displayed");
+			}
+
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "Exists", "Validate That " + Str_discription + " displayed");
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+	}
+
+	/**
+	 * notExistsWithScreenshot method Validate that Element is not present in UI
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void notExistsWithScreenshot(String Str_XpathOfElement, String Str_discription) {
+
+		try {
+			// screenshot();
+			if (driver.findElements(By.xpath(Str_XpathOfElement)).size() < 1) {
+				logger.log(LogStatus.PASS, "notExists", "Validate that " + Str_discription + " not displayed");
+				System.out.println("Validate That " + Str_discription + " not displayed");
+			} else {
+				System.out.println(Str_discription + " displayed");
+				Assert.fail();
+			}
+
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "notExists", "Validate that " + Str_discription + " not displayed");
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+	}
+
+	/**
+	 * clickUsingJS method Perform click operation on Web object
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void clickUsingJS(String str_Xpath, String str_discription) {
+		try {
+			// waitTillElementPresent(str_Xpath);
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", str_Xpath);
+
+			System.out.println(str_discription);
+			logger.log(LogStatus.INFO, "clickUsingJS", str_discription);
+		} catch (Exception e) {
+			logger.log(LogStatus.FAIL, "clickUsingJS", str_discription);
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	/**
+	 * uploadFileUsingRobot method Attached the given file to UI
+	 * 
+	 * @author Abhijeet
+	 */
+
+	public static void uploadFileUsingRobot(String str_filepath) {
+		try {
+			StringSelection stringSelection = new StringSelection(str_filepath);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+			// Robot rb= new Robot();
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_V);
+			robot.keyRelease(KeyEvent.VK_V);
+			Thread.sleep(1000);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+			Thread.sleep(1000);
+			robot.keyPress(KeyEvent.VK_TAB);
+			robot.keyRelease(KeyEvent.VK_TAB);
+			Thread.sleep(1000);
+			robot.keyPress(KeyEvent.VK_TAB);
+			robot.keyRelease(KeyEvent.VK_TAB);
+			Thread.sleep(1000);
+			robot.keyPress(KeyEvent.VK_ENTER);
+			robot.keyRelease(KeyEvent.VK_ENTER);
+			Thread.sleep(2000);
+			logger.log(LogStatus.INFO, "uploadFileUsingRobot", str_filepath);
+		} catch (
+
+		Exception e) {
+			logger.log(LogStatus.FAIL, "uploadFileUsingRobot", str_filepath);
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	
+	@Parameters("browser")
+	public void setup(String browser){
+		
+		 
+		  // Passing Browser parameter from TestNG xml
+		 
+		 
+		  // If the browser is Firefox, then do this
+		 
+		  if(browser.equalsIgnoreCase("firefox")) {
+		 
+			  System.setProperty("webdriver.firefox.marionette","C:\\geckodriver.exe");
+			  driver = new FirefoxDriver();
+		 
+		  // If browser is IE, then do this	  
+		 
+		  }else if (browser.equalsIgnoreCase("chrome")) { 
+		 
+			  // Here I am setting up the path for my IEDriver
+			  launchApplication();
+		 
+		  } 
+	}
+
+}

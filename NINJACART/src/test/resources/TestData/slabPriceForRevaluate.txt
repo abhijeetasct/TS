@@ -1,0 +1,15 @@
+facilityId,customerTypeId,skuName,skuId,lots,salePriceFactor,active
+13,15,cauliflower,23,10,3,1
+13,15,cauliflower,23,15,4,1
+13,15,Lemon (small),773,2,2,1
+13,15,Lemon (small),773,3,3,1
+13,15,Potato (local),86,3,2,1
+13,15,Potato (local),86,6,4,1
+13,15,Tomato (local),44,4,2,1
+13,15,Tomato (local),44,7,3,1
+13,15,Onion - Graded (Local),84,3,2,1
+13,15,Onion - Graded (Local),84,6,3,1
+13,15,Apple washington (big),769,6,2,1
+13,15,Apple washington (big),769,11,3,1
+
+

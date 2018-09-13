@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="false" >
+  <test name="Test" parallel="false" preserve-order="true" >
+    <classes>
+     <!--
+      <class name="com.ninjacart.scripts.FlashScripts">
+       <methods>
+      
+          <include name="createSimpleGRN"/>
+          <include name="createPartialGRN" />
+         
+          <include name="editSupplyQuantitySimple" />
+         
+          <include name="editSupplyQuantityPartial" />
+         
+          <include name="partialGRNPartialLotting" />
+           
+          <include name="partialEditSupplyQuantityPartialLotting"/> 
+          
+          <include name="simpleGradingSKUVarients" />
+         
+         
+          <include name="reGradingToGrading"/>
+          
+          <include name="reGradingToGradingForSKuVarient"/>
+         
+        </methods>
+      </class> 
+       -->
+    
+    
+      <class name="com.ninjacart.scripts.DirectsScripts">
+       <methods>  
+ <!-- 
+       
+           <include name="simpleCreationOfSaleOrder"/>
+           <include name="normalEditSaleOrder"/>
+           <include name="saleOrderWithStockOverride"/>
+           <include name="editOrderWithStockOverride"/>
+           <include name="saleOrderWithStockOut"/> 
+            
+           <include name="createSimpleSaleOrderBasedOnSlab"/>
+         
+           <include name="createSimpleSaleOrderBasedOnSlabWithCartRevaluate"/>
+           
+           <include name="createSaleOrderWithSlabPriceRevaluate"/>
+            -->
+           <include name="createSaleOrderAndRevaluateSlabPriceAndValidate"/>
+           
+              <!-- 
+           <include name="minimumOrderValue"/>
+           <include name="minimumOrderValueWithCartRevaluate"/>
+    	   <include name="captureExactDemand"/>
+    	   <include name="discount_Promotions"/>
+     	   <include name="discount_PromotionsWithCartRevaluated"/>
+     	   
+           <include name="discount_PromotionsAfterCartRevaluated"/> 
+     	   <include name="discount_PromotionsAfterEditOrder"/>
+           <include name="validateDiscountForRs5000AndRs9000"/>
+           <include name="validate10PercentDiscountAfterCartRevaluateForLessThanRs9000"/>
+    	   <include name="validate10PercentDiscountAfterEditOrderForLessThanRs9000"/>
+           <include name="validateDiscountForRs5000AndRs9000WithEditOrder"/>  
+           
+           -->
+        </methods>
+      </class>
+     
+      
+       
+    <!--   <class name="com.ninjacart.scripts.biFrostScripts">
+        <methods>
+  			<include name="createPurchaseOrder"/>
+        </methods>
+      </class> -->
+      
+    </classes> 
+  </test> <!-- Test -->
+</suite> <!-- Suite -->

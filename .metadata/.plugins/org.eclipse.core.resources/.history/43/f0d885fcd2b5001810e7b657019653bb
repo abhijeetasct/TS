@@ -1,0 +1,145 @@
+/**
+ * 
+ */
+package com.ts.scriptlibrary;
+
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import java.io.File;
+
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
+import com.codoid.products.exception.FilloException;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.ts.businesslibrary.BusinessKeywords;
+
+/**
+ * @author user
+ *
+ */
+public class TeamSecrets extends BusinessKeywords {
+
+	com.ts.repositorylibrary.TeamSecrets ts = new com.ts.repositorylibrary.TeamSecrets();
+
+	@BeforeSuite
+	public void start() throws FilloException {
+
+		report = new ExtentReports("Reports/ExecutionReport.html", true);
+		report.loadConfig(new File("src/test/resources/extent-config.xml"));
+
+	}
+
+	@BeforeMethod
+	@Parameters("browser")
+	public void setup(String browser) {
+
+		// Passing Browser parameter from TestNG xml
+
+		// If the browser is Firefox, then do this
+
+		if (browser.equalsIgnoreCase("firefox")) {
+
+			System.setProperty("webdriver.gecko.driver",
+					"/Users/user/Documents/Abhijeet/Workspace/TEAMSECRETS-H/src/test/resources/Drivers/geckodriver");
+
+			driver = new FirefoxDriver();
+			driver.manage().window().fullscreen();
+
+			// If browser is chrome, then do this
+
+		} else if (browser.equalsIgnoreCase("chrome")) {
+
+			// Here I am setting up the path for my IEDriver
+			launchApplication();
+
+		}
+	}
+
+	@Test
+	public void validateTeamSceretPanelIsAvailable() throws Exception {
+
+		logger = report.startTest("Validate team sceret panel is available", "Test Case Number 1");
+		loginToJIRA(fetchData("JiraURL"), fetchData("Username"), fetchData("Password"));
+		validateTeamSecretPanel();
+
+	}
+
+	@Test
+	public void allComponentOfPostaTeamSecretsPage() throws Exception {
+		logger = report.startTest("Validate that post a team secrets page is showing all the components",
+				"Test Case Number 2");
+		loginToJIRA(fetchData("JiraURL"), fetchData("Username"), fetchData("Password"));
+		validateTeamSecretPanel();
+		clickAndValidatePostaTeamSecretPage();
+		validateLogoAndSelectFilesComponentsOfPostaTeamSecretsPage();
+		validateRightSectionOfPostaTeamSecretsPage();
+
+	}
+
+	@Test
+	public void validateAllImportantMessageAtPostaTeamSecertPage() throws Exception {
+		logger = report.startTest("Validate all important message at post a team secert page",
+				"Validate user gets all importants messages when click on confirm upload button");
+		loginToJIRA(fetchData("JiraURL"), fetchData("Username"), fetchData("Password"));
+		validateTeamSecretPanel();
+		clickAndValidatePostaTeamSecretPage();
+		allImportantMessageAtPostaTeamScertsScreen();
+	}
+
+	// @Test
+	public void validateMessageForZeroFileSize() throws Exception {
+
+		logger = report.startTest("Validate message for zero file size",
+				"Validate that user get proper message for invalid file size");
+		loginToJIRA(fetchData("JiraURL"), fetchData("Username"), fetchData("Password"));
+		validateTeamSecretPanel();
+		clickAndValidatePostaTeamSecretPage();
+		Click((ts.selectFiles), "Click On Select Files Button");
+		uploadFileUsingRobot(fetchData("zeroFileSize"));
+		// exists(ts.emptyFilesAreNotAllowed, "'Empty files are not
+		// allowed.'message");
+		existsWithScreenshot(ts.someOfTheFilesfailedToUpload,
+				"'Some of the files failed to upload. Please check and fix/remove the failures before proceeding.'message");
+
+	}
+
+	// @Test
+	public void validateMessageForMax25MBFileSize() throws Exception {
+
+		logger = report.startTest("Validate message for max 25 MB file size",
+				"Validate proper message when user trying to upload file with size more than 25 MB");
+		loginToJIRA(fetchData("JiraURL"), fetchData("Username"), fetchData("Password"));
+		validateTeamSecretPanel();
+		clickAndValidatePostaTeamSecretPage();
+		Click((ts.selectFiles), "Click On Select Files Button");
+		uploadFileUsingRobot(fetchData("maxFileSize"));
+		// exists(ts.fileMustBeUnder25MB, "'File must be under 25 MB.'message");
+		existsWithScreenshot(ts.someOfTheFilesfailedToUpload,
+				"'Some of the files failed to upload. Please check and fix/remove the failures before proceeding.'message");
+
+	}
+
+	@AfterMethod(alwaysRun = true)
+
+	public void tearDown(ITestResult result) throws Exception {
+		if (ITestResult.FAILURE == result.getStatus()) {
+			captureScreenshot();
+		}
+		// driver.close();
+		medWait();
+		driver.close();
+		report.endTest(logger);
+		report.flush();
+
+	}
+
+}
